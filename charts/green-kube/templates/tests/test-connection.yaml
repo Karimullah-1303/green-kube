@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "green-kube.fullname" . }}-test-connection"
+  labels:
+    {{- include "green-kube.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "green-kube.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
