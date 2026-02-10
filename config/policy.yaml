@@ -1,0 +1,29 @@
+
+  apiVersion: kyverno.io/v1
+  kind: ClusterPolicy
+  metadata:
+    name: require-memory-limits
+  spec:
+    validationFailureAction: Enforce
+    rules:
+      - name: check-memory-limits
+        match:
+          any:
+            - resources:
+                kinds:
+                  - Pod
+        exclude:
+          any:
+            - resources:
+                namespaces:
+                  - kube-system
+                  - monitoring
+                  - argocd
+        validate:
+          message: "🚨 GREEN KUBE ALERT: You cannot deploy pods without memory limits!"
+          pattern:
+            spec:
+              containers:
+                - resources:
+                    limits:
+                      memory: "?*"

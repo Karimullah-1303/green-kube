@@ -1,6 +1,5 @@
 name: CI/CD Pipeline
 
-# Trigger: Run this pipeline whenever code is pushed to the 'main' branch
 on:
   push:
     branches: [ "main" ]
@@ -13,6 +12,16 @@ jobs:
     # 1. Check out your code from GitHub
     - name: Checkout Code
       uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: '.'
+        format: 'table'
+        exit-code: '1'  # Fail the build if vulnerabilities are found
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
 
     # 2. Log in to Docker Hub using the secrets you created
     - name: Login to Docker Hub

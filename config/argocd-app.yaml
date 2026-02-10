@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: green-kube
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Karimullah-1303/green-kube.git
+    targetRevision: HEAD
+    path: charts/green-kube
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
