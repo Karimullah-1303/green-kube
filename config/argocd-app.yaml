@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/Karimullah-1303/green-kube.git
-    targetRevision: HEAD
+    targetRevision: main
     path: charts/green-kube
   destination:
     server: https://kubernetes.default.svc

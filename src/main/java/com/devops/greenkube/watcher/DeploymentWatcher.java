@@ -1,5 +1,6 @@
 package com.devops.greenkube.watcher;
 
+import com.devops.greenkube.service.LeaderElectionService;
 import com.devops.greenkube.service.WasteAnalyzer;
 import io.kubernetes.client.informer.SharedIndexInformer;
 import io.kubernetes.client.informer.SharedInformerFactory;
@@ -21,6 +22,7 @@ import jakarta.annotation.PostConstruct;
 @Data
 @RequiredArgsConstructor
 public class DeploymentWatcher {
+    private final LeaderElectionService leaderService;
     private final ApiClient apiClient;
     private final AppsV1Api appsV1Api;
     private final WasteAnalyzer wasteAnalyzer;
@@ -44,14 +46,16 @@ public class DeploymentWatcher {
                 informer.addEventHandler(new io.kubernetes.client.informer.ResourceEventHandler<V1Deployment>() {
                     @Override
                     public void onAdd(V1Deployment obj) {log.info("Scanning: {}/{}", obj.getMetadata().getNamespace(), obj.getMetadata().getName());
-                        wasteAnalyzer.analyze(obj);}
+                        if(!leaderService.isCurrentLeader()) return ;
+                        wasteAnalyzer.enqueueForAnalysis(obj);}
 
                     @Override
                     public void onUpdate(V1Deployment oldObj, V1Deployment newObj) {
                         if(!oldObj.getMetadata().getResourceVersion().equals(newObj.getMetadata().getResourceVersion())){
                             log.info("Changed: {}/{}", newObj.getMetadata().getNamespace(), newObj.getMetadata().getName());
                         }
-                        wasteAnalyzer.analyze(newObj);}
+                        if(!leaderService.isCurrentLeader())return;
+                        wasteAnalyzer.enqueueForAnalysis(newObj);}
 
                     @Override
                     public void onDelete(V1Deployment obj, boolean deletedFinalStateUnknown) {}
