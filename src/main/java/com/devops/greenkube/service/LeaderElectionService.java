@@ -61,7 +61,7 @@ public class LeaderElectionService {
     }
 
     // Other classes will ask this method if they are allowed to work
-    public boolean isCurrentPodLeader() {
+    public boolean isCurrentLeader() {
         return isLeader;
     }
 }
