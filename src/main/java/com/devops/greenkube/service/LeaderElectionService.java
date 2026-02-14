@@ -27,6 +27,7 @@ public class LeaderElectionService {
 
     @PostConstruct
     public void startElection() {
+        System.out.println("Start Election started");
         // 1. Identify this specific pod.
         // If we scale to 3 replicas, each needs a unique name so they can fight for the lock.
         String tempPodName = System.getenv("HOSTNAME");
@@ -38,6 +39,7 @@ public class LeaderElectionService {
 
         // 2. Define the Lock (The Lease object)
         // This targets the "coordination.k8s.io" API to create/update our Conch Shell
+        System.out.println("Pod name: " + podName);
         Lock lock = new LeaseLock(
                 "default",
                 "green-kube-lock",
@@ -55,6 +57,7 @@ public class LeaderElectionService {
 
         // 4. Start the Election in a background thread
         new Thread(() -> {
+            System.out.println("Thread started");
             // FIXED: The constructor ONLY takes the config object now!
             LeaderElector elector = new LeaderElector(config);
 
