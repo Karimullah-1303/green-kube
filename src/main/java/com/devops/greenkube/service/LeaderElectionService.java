@@ -1,9 +1,12 @@
 package com.devops.greenkube.service;
 
+import com.google.protobuf.Api;
 import io.kubernetes.client.extended.leaderelection.LeaderElectionConfig;
 import io.kubernetes.client.extended.leaderelection.LeaderElector;
 import io.kubernetes.client.extended.leaderelection.Lock;
 import io.kubernetes.client.extended.leaderelection.resourcelock.LeaseLock;
+import io.kubernetes.client.openapi.ApiClient;
+import io.kubernetes.client.openapi.Configuration;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +17,11 @@ import java.util.UUID;
 public class LeaderElectionService {
 
     private boolean isLeader = false; // THE MASTER FLAG
+
+
+    public LeaderElectionService(ApiClient apiClient) {
+        Configuration.setDefaultApiClient(apiClient);
+    }
 
     @PostConstruct
     public void startElection() {
@@ -53,7 +61,7 @@ public class LeaderElectionService {
                         isLeader = true;
                     },
                     () -> {
-                        System.out.println("🛑 I LOST LEADERSHIP! (" + podName + ") Stopping duties...");
+                        System.out.println(" I LOST LEADERSHIP! (" + podName + ") Stopping duties...");
                         isLeader = false;
                     }
             );
