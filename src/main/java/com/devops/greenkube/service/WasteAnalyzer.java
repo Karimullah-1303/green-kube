@@ -47,7 +47,7 @@ public class WasteAnalyzer {
 
     @Scheduled(fixedRate = 300000)
     public void scheduledClusterAudit() {
-        if(!leaderService.isCurrentLeader()){return ;}
+        if(!leaderService.isCurrentLeader()){return;}
         System.out.println("🕰️ Starting Scheduled Historical Waste Audit...");
         try {
             // Safe fallback for older Kubernetes Java Clients

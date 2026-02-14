@@ -61,7 +61,7 @@ public class LeaderElectionService {
                         isLeader = true;
                     },
                     () -> {
-                        System.out.println(" I LOST LEADERSHIP! (" + podName + ") Stopping duties...");
+                        System.out.println("I am No a leader! (" + podName + ") Stopping duties...");
                         isLeader = false;
                     }
             );
