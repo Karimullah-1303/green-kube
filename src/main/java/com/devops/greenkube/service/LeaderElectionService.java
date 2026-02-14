@@ -9,7 +9,7 @@ import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.Configuration;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -21,6 +21,7 @@ public class LeaderElectionService {
 
 
     public LeaderElectionService(ApiClient apiClient) {
+        System.out.println("Leader Election Service Started");
         this.apiClient = apiClient;
         Configuration.setDefaultApiClient(apiClient);
     }
