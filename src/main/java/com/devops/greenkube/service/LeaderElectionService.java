@@ -16,10 +16,12 @@ import java.util.UUID;
 @Service
 public class LeaderElectionService {
 
+    ApiClient apiClient;
     private boolean isLeader = false; // THE MASTER FLAG
 
 
     public LeaderElectionService(ApiClient apiClient) {
+        this.apiClient = apiClient;
         Configuration.setDefaultApiClient(apiClient);
     }
 
@@ -39,7 +41,8 @@ public class LeaderElectionService {
         Lock lock = new LeaseLock(
                 "default",
                 "green-kube-lock",
-                podName
+                podName,
+                apiClient
         );
 
         // 3. Configure the Timers using LeaderElectionConfig
