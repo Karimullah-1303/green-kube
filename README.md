@@ -82,6 +82,16 @@ Check your Slack channel! The elected Green Kube leader will instantly detect th
 
 
 
+### 🗺️ Roadmap: Production "Dogfooding"
+
+Green Kube was built to solve real-world cloud billing issues. To demonstrate its capabilities in a live production environment, Green Kube is currently being integrated into the infrastructure stack for **CLUTCH**—a microservices-based peer-to-peer campus delivery platform. 
+
+**Upcoming Milestones:**
+- [ ] Deploy the Green Kube operator to a live GCP (Google Kubernetes Engine) cluster.
+- [ ] Manage the FinOps budget of the delivery platform's Spot VM Node Pools.
+- [ ] Handle "bursty" traffic spikes during campus lunch hours, using Green Kube to tune HPA (Horizontal Pod Autoscaler) limits in real-time.
+
+
 ### 👨‍💻 About the Developer
 I am a 3rd-year CSE Core student based in Visakhapatnam with a deep, sustained focus on DevOps, Cloud Computing, and Software Engineering. I built Green Kube to tackle real-world distributed systems challenges and master production-grade infrastructure automation.
 
