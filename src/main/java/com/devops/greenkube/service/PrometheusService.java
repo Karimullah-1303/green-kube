@@ -22,7 +22,7 @@ public class PrometheusService {
 
     public double getMaxMemoryUsageBytes(String namespace, String appName, String duration) {
         try {
-            // Added max() wrapper to ensure we get a single highest value across all replicas
+
             String query = String.format("max(max_over_time(container_memory_usage_bytes{namespace=\"%s\", pod=~\"%s-.*\"}[%s]))", namespace, appName, duration);
 
             String url = K8sConfig.PROMETHEUS_URL + "/api/v1/query?query=" + URLEncoder.encode(query, StandardCharsets.UTF_8);
@@ -33,7 +33,7 @@ public class PrometheusService {
             JsonNode result = root.path("data").path("result");
 
             if (result.isArray() && result.size() > 0) {
-                // Parse the PromQL scalar result (e.g., [1707482400.0, "154321000"])
+
                 return Double.parseDouble(result.get(0).path("value").get(1).asText());
             }
         } catch(Exception e) {

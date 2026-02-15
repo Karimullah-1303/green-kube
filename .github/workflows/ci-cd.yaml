@@ -41,5 +41,6 @@ jobs:
           ${{ secrets.DOCKER_USERNAME }}/green-kube-controller:latest
           ${{ secrets.DOCKER_USERNAME }}/green-kube-controller:v1
           ${{ secrets.DOCKER_USERNAME }}/green-kube-controller:v2
+
         cache-from: type=gha
         cache-to: type=gha,mode=max

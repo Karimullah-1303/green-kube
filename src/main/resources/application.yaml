@@ -1,3 +1,7 @@
 spring:
   application:
     name: green-kube
+
+slack:
+  webhook:
+    url: "93314800ce17d21e88cd5b17258101bd"

@@ -7,6 +7,7 @@ import io.kubernetes.client.openapi.models.V1Deployment;
 import io.kubernetes.client.custom.Quantity;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 @RequiredArgsConstructor
 public class WasteAnalyzer {
 
+    @Autowired
+    private NotificationService notificationService;
     private final LeaderElectionService leaderService;
     private final PrometheusService prometheusService;
     private final AppsV1Api appsV1Api;
@@ -50,7 +53,7 @@ public class WasteAnalyzer {
         if(!leaderService.isCurrentLeader()){return;}
         System.out.println("🕰️ Starting Scheduled Historical Waste Audit...");
         try {
-            // Safe fallback for older Kubernetes Java Clients
+
             V1DeploymentList deployments = appsV1Api.listDeploymentForAllNamespaces().execute();
 
             for (V1Deployment dep : deployments.getItems()) {
@@ -70,12 +73,11 @@ public class WasteAnalyzer {
         String ns = dep.getMetadata().getNamespace();
         String name = dep.getMetadata().getName();
 
-        // 1. SKIP SYSTEM APPS (Reduces noise)
         if (ns.equals("kube-system") || ns.equals("monitoring") || ns.equals("argocd")) {
-            return; // Silently ignore system stuff
+            return;
         }
 
-        // 2. Get Configured Limit
+
         try {
             if (dep.getSpec().getTemplate().getSpec().getContainers().isEmpty()) return;
             var resources = dep.getSpec().getTemplate().getSpec().getContainers().get(0).getResources();
@@ -91,6 +93,8 @@ public class WasteAnalyzer {
                     double memUtil = (maxUsageMB / limitMB) * 100.0;
                     if (memUtil < 20.0) {
                         System.out.printf("🚨 MEMORY WASTE [%s]: Limit=%.0fMB, Peak=%.0fMB (%.1f%% utilized in %s)\n", name, limitMB, maxUsageMB, memUtil, timeWindow);
+                        String msg = String.format("MEMORY WASTE: [%s]\nLimit: '%.0fMB' | Peak: '%.0fMB' ('%.1f%%' utilized)", name, limitMB, maxUsageMB, memUtil);
+                        notificationService.sendAlert(msg);
                     }
                 }
             }
@@ -103,8 +107,10 @@ public class WasteAnalyzer {
 
                 if (maxUsageCores > 0) {
                     double cpuUtil = (maxUsageCores / limitCores) * 100.0;
-                    if (cpuUtil < 10.0) { // CPU threshold is lower because CPU is bursty
+                    if (cpuUtil < 10.0) {
                         System.out.printf("🚨 CPU IDLE WASTE [%s]: Limit=%.2f Cores, Peak=%.3f Cores (%.1f%% utilized in %s)\n", name, limitCores, maxUsageCores, cpuUtil, timeWindow);
+                        String msg = String.format("CPU IDLE : [%s]\nLimit: '%.2f Cores' | Peak: '%.3f Cores' ('%.1f%%' utilized)", name, limitCores, maxUsageCores, cpuUtil);
+                        notificationService.sendAlert(msg);
                     }
                 }
             }

@@ -17,7 +17,7 @@ import java.util.UUID;
 public class LeaderElectionService {
 
     private final ApiClient apiClient;
-    private boolean isLeader = false; // THE MASTER FLAG
+    private boolean isLeader = false;
 
 
     public LeaderElectionService(ApiClient apiClient) {
@@ -29,8 +29,7 @@ public class LeaderElectionService {
     @PostConstruct
     public void startElection() {
         System.out.println("Start Election started");
-        // 1. Identify this specific pod.
-        // If we scale to 3 replicas, each needs a unique name so they can fight for the lock.
+
         String tempPodName = System.getenv("HOSTNAME");
         if (tempPodName == null || tempPodName.isEmpty()) {
             tempPodName = "local-machine-" + UUID.randomUUID().toString();
@@ -38,8 +37,6 @@ public class LeaderElectionService {
 
         final String podName = tempPodName;
 
-        // 2. Define the Lock (The Lease object)
-        // This targets the "coordination.k8s.io" API to create/update our Conch Shell
         System.out.println("Pod name: " + podName);
         Lock lock = new LeaseLock(
                 "default",
@@ -48,18 +45,18 @@ public class LeaderElectionService {
                 apiClient
         );
 
-        // 3. Configure the Timers using LeaderElectionConfig
+
         LeaderElectionConfig config = new LeaderElectionConfig(
                 lock,
-                Duration.ofSeconds(15), // LeaseDuration: How long until Standbys take over
-                Duration.ofSeconds(10), // RenewDeadline: Leader tries to renew before this
-                Duration.ofSeconds(2)   // RetryPeriod: The Heartbeat frequency
+                Duration.ofSeconds(15),
+                Duration.ofSeconds(10),
+                Duration.ofSeconds(2)
         );
 
-        // 4. Start the Election in a background thread
+
         new Thread(() -> {
             System.out.println("Thread started");
-            // FIXED: The constructor ONLY takes the config object now!
+
             LeaderElector elector = new LeaderElector(config);
 
             elector.run(
@@ -75,7 +72,7 @@ public class LeaderElectionService {
         }).start();
     }
 
-    // Other classes will ask this method if they are allowed to work
+
     public boolean isCurrentLeader() {
         return isLeader;
     }
