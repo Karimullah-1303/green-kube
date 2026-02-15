@@ -16,7 +16,7 @@ import java.util.UUID;
 @Service
 public class LeaderElectionService {
 
-    ApiClient apiClient;
+    private final ApiClient apiClient;
     private boolean isLeader = false; // THE MASTER FLAG
 
 
