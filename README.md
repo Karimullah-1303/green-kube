@@ -34,7 +34,7 @@ This project goes beyond standard CRUD apps, implementing a true Enterprise GitO
 
 Green Kube provides a "Single Pane of Glass" to view cluster efficiency. The custom dashboard highlights the exact gap between the hard limits (dashed ceilings) and live usage (solid lines), while monitoring CPU thresholds and pod stability in real-time.
 
-![Green Kube Grafana Dashboard](images/dashboard.png)
+![Green Kube Grafana Dashboard](images/grafana_dashboard_green-kube.png)
 > *The dashboard successfully tracking a memory-monster pod alongside highly optimized baseline workloads.*
 
 ## 🚀 Getting Started
@@ -48,7 +48,7 @@ Green Kube provides a "Single Pane of Glass" to view cluster efficiency. The cus
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/green-kube.git
+git clone https://github.com/Karimullah-1303/green-kube.git
 cd green-kube
 ```
 
@@ -87,7 +87,7 @@ I am a 3rd-year CSE Core student based in Visakhapatnam with a deep, sustained f
 
 I am actively looking for a DevOps or Software Engineering Internship! Let's connect:
 
-LinkedIn
+[LinkedIn](www.linkedin.com/in/karimullah-shaik-680139290)
 
 Built with ❤️, Java, and a whole lot of YAML.
 
