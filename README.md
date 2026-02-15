@@ -15,6 +15,8 @@ In enterprise Kubernetes clusters, developers often "over-provision" their pods 
 
 ## 🏗️ Advanced Architecture & Tech Stack
 
+![Green Kube Architechture](images/green_kube_architechture.png)
+
 This project goes beyond standard CRUD apps, implementing a true Enterprise GitOps workflow and robust Operator SDK patterns:
 
 * **Infrastructure as Code (Terraform):** The foundational cluster resources and initial GitOps bootstrap are provisioned declaratively via Terraform.
@@ -46,7 +48,7 @@ Green Kube provides a "Single Pane of Glass" to view cluster efficiency. The cus
 
 **1. Clone the repository**
 ```bash
-git clone [https://github.com/YOUR_USERNAME/green-kube.git](https://github.com/YOUR_USERNAME/green-kube.git)
+git clone https://github.com/YOUR_USERNAME/green-kube.git
 cd green-kube
 ```
 
